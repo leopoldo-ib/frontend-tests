@@ -8,7 +8,7 @@ test.describe('Contact click', () => {
   })
 
   test('matches the screenshot', async ({page})=> {
-    await page.getByRole('link',{name: 'Contact'}).click() 
+    await page.locator('#HeaderMenu-contact').click() 
     await page.goto(config.ROUTES.CONTACT)
     await expect(page).toHaveScreenshot()
   })
