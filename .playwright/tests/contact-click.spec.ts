@@ -9,7 +9,8 @@ test.describe('Contact click', () => {
 
   test('matches the screenshot', async ({page})=> {
     const link = page.locator('#HeaderMenu-contact')
-    await link.click().waitFor({ "state": "visible" })
+    await link.click()
+    await link.waitFor({ "state": "visible" })
     await page.goto(config.ROUTES.CONTACT)
     await expect(page).toHaveScreenshot()
   })
