@@ -1,0 +1,19 @@
+{
+  "name": "ud-dev",
+  "version": "1.0.0",
+  "description": "The Shopify theme for the [ud-dev.myshopify.com](https://ud-dev.myshopify.com) store.",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.36.1",
+    "dotenv": "^16.3.1"
+  }
+}
