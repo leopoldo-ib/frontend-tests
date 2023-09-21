@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  test:
+    build: .
+    working_dir: /test
+    environment:
+      - CI=true
+    volumes:
+      - ../:/test
+    ports:
+      - 9323:9323
+    stdin_open: true

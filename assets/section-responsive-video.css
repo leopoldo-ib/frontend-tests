@@ -1,0 +1,161 @@
+.responsive-video-section {
+  position: relative;
+  z-index: 0;
+  padding: 3.6rem 0 3.6rem 0;
+}
+
+.responsive-video-section__title-wrapper {
+  margin-bottom: 3rem;
+  margin-top: 0;
+}
+
+.responsive-video-section__title {
+  margin-top: 0;
+  margin: 0 0 3rem 2rem;
+}
+
+.responsive-video-section__media {
+  --mobile-ratio-percent: 177.8%;
+  position: relative;
+  padding-bottom: calc(var(--mobile-ratio-percent) - var(--media-border-width));
+  display: block;
+}
+
+.responsive-video-section__media[loaded] > .responsive-video-section__poster {
+  display: none;
+}
+
+.responsive-video-section__media,
+.responsive-video-section__media img,
+.responsive-video-section__media video,
+.responsive-video-section__media iframe,
+.responsive-video-section__media .placeholder-svg {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+/* Needed for gradient continuity with or without animation so that transparent PNG images come up as we would expect */
+.scroll-trigger:where(.gradient.responsive-video-section__media) {
+  background: transparent;
+}
+
+.responsive-video-section__media.global-media-settings--full-width {
+  padding-bottom: var(--mobile-ratio-percent);
+}
+
+.responsive-video-section__media {
+  box-shadow: var(--media-shadow-horizontal-offset) var(--media-shadow-vertical-offset) var(--media-shadow-blur-radius)
+    rgba(var(--color-shadow), var(--media-shadow-opacity));
+}
+
+.responsive-video-section__media:after {
+  content: none;
+}
+
+.responsive-video-section__poster:focus {
+  outline-offset: 0.3rem;
+}
+
+.responsive-video-section__media iframe {
+  background-color: rgba(var(--color-foreground), 0.03);
+  border: 0;
+}
+
+.responsive-video-section__poster,
+.responsive-video-section__media iframe,
+.responsive-video-section__media video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.responsive-video-section__poster {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--border-radius) - var(--border-width));
+}
+
+.responsive-video-section__poster:focus-visible,
+.responsive-video-section__poster:focus {
+  outline: none;
+}
+
+.responsive-video-section__poster img {
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.responsive-video-section__poster > *:not(.responsive-video-section__poster-button) {
+  background-color: rgba(var(--color-foreground), 0.1);
+  position: relative;
+  overflow: hidden;
+  display: block;
+  max-width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.responsive-video-section__poster-button {
+  background-color: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  border-radius: 50%;
+  color: rgb(var(--color-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 6.2rem;
+  width: 6.2rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform var(--duration-short) ease, color var(--duration-short) ease;
+  z-index: 1;
+}
+
+.responsive-video-section__poster-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.responsive-video-section__poster-button .icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.responsive-video-section__poster-button .icon-play {
+  margin-left: 0.2rem;
+}
+
+@media (prefers-reduced-motion) {
+  .responsive-video-section__poster-button {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.responsive-video-section__media video {
+  background: #000000;
+}
+
+@media screen and (min-width: 750px) {
+  .responsive-video-section__media {
+    --desktop-ratio-percent: 56.25%;
+    padding-bottom: calc(var(--desktop-ratio-percent) - var(--media-border-width));
+  }
+  .responsive-video-section__media.global-media-settings--full-width {
+    padding-bottom: var(--desktop-ratio-percent);
+  }
+}

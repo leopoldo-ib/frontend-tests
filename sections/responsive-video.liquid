@@ -1,0 +1,230 @@
+{{ 'section-responsive-video.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'responsive-video.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign mobile_video_id = section.settings.mobile_video.id | default: section.settings.mobile_video_url.id
+  assign desktop_video_id = section.settings.desktop_video.id | default: section.settings.desktop_video_url.id
+  assign mobile_video_alt = section.settings.mobile_video.alt | default: section.settings.description
+  assign desktop_video_alt = section.settings.desktop_video.alt | default: section.settings.description
+  assign mobile_alt_text = 'sections.video.load_video' | t: description: mobile_video_alt | escape
+  assign desktop_alt_text = 'sections.video.load_video' | t: description: desktop_video_alt | escape
+  assign mobile_poster = section.settings.mobile_cover_image | default: section.settings.mobile_video.preview_image
+  assign desktop_poster = section.settings.desktop_cover_image | default: section.settings.desktop_video.preview_image
+-%}
+
+<div class="responsive-video-section">
+  <responsive-video
+    class="responsive-video-section__media{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    style="
+      {% comment %} Check ratio percent on mobile based on available data {% endcomment %}
+      {% if section.settings.mobile_video != blank %}
+        --mobile-ratio-percent: {{ 1 | divided_by: section.settings.mobile_video.aspect_ratio | times: 100 }}%;
+      {% elsif section.settings.mobile_cover_image != blank %}
+        --mobile-ratio-percent: {{ 1 | divided_by: section.settings.mobile_cover_image.aspect_ratio | times: 100 }}%;
+      {% else %}
+        --mobile-ratio-percent: 177.8%;
+      {% endif %}
+
+      {% comment %} Check ratio percent on desktop based on available data {% endcomment %}
+      {% if section.settings.desktop_video != blank %}
+        --desktop-ratio-percent: {{ 1 | divided_by: section.settings.desktop_video.aspect_ratio | times: 100 }}%;
+      {% elsif section.settings.desktop_cover_image != blank %}
+        --desktop-ratio-percent: {{ 1 | divided_by: section.settings.desktop_cover_image.aspect_ratio | times: 100 }}%;
+      {% else %}
+        --desktop-ratio-percent: 56.25%;
+      {% endif %}
+    "
+    data-manual-video-play="{{ section.settings.manual_video_play }}"
+  >
+    <button
+      id="Lazy-Video-Poster-{{ section.id }}"
+      class="responsive-video-section__poster"
+      type="button"
+    >
+      <template id="Responsive-Video-Poster-Template-{{ section.id }}">
+        <div id="Responsive-Video-Section-Mobile-Poster-{{ section.id }}">
+          {%- if mobile_poster != null -%}
+            {{
+              mobile_poster
+              | image_url: width: 3840
+              | image_tag:
+                loading: 'lazy',
+                sizes: '100vw',
+                widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+                alt: mobile_alt_text
+            }}
+          {%- else -%}
+            {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+          {%- endif -%}
+        </div>
+
+        <div id="Responsive-Video-Section-Desktop-Poster-{{ section.id }}">
+          {%- if desktop_poster != null -%}
+            {{
+              desktop_poster
+              | image_url: width: 3840
+              | image_tag:
+                loading: 'lazy',
+                sizes: '100vw',
+                widths: '375, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+                alt: desktop_alt_text
+            }}
+          {%- else -%}
+            {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+          {%- endif -%}
+        </div>
+      </template>
+
+      <span class="responsive-video-section__poster-button">
+        {%- render 'icon-play' -%}
+      </span>
+    </button>
+    <template id="Responsive-Video-Template-{{ section.id }}">
+      <div id="Responsive-Video-Section-Mobile-{{ section.id }}">
+        {%- if section.settings.mobile_video == null and section.settings.mobile_video_url != null -%}
+          {%- liquid
+            assign mobile_loop = ''
+            if section.settings.enable_video_looping
+              assign mobile_loop = '&loop=1&playlist=' | append: mobile_video_id
+            endif
+          -%}
+          {%- if section.settings.mobile_video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ mobile_video_id }}?enablejsapi=1&autoplay=1{{ mobile_loop }}"
+              class="js-youtube"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ section.settings.description | escape }}"
+            ></iframe>
+          {%- endif -%}
+        {%- else -%}
+          {{
+            section.settings.mobile_video
+            | video_tag:
+              image_size: '1100x',
+              autoplay: true,
+              loop: section.settings.enable_video_looping,
+              controls: true,
+              muted: true
+          }}
+        {%- endif -%}
+      </div>
+
+      <div id="Responsive-Video-Section-Desktop-{{ section.id }}">
+        {%- if section.settings.desktop_video == null and section.settings.desktop_video_url != null -%}
+          {%- liquid
+            assign desktop_loop = ''
+            if section.settings.enable_video_looping
+              assign desktop_loop = '&loop=1&playlist=' | append: desktop_video_id
+            endif
+          -%}
+          {%- if section.settings.desktop_video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ desktop_video_id }}?enablejsapi=1&autoplay=1{{ desktop_loop }}"
+              class="js-youtube"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{ section.settings.description | escape }}"
+            ></iframe>
+          {%- endif -%}
+        {%- else -%}
+          {{
+            section.settings.desktop_video
+            | video_tag:
+              image_size: '1100x',
+              autoplay: true,
+              loop: section.settings.enable_video_looping,
+              controls: true,
+              muted: true
+          }}
+        {%- endif -%}
+      </div>
+    </template>
+  </responsive-video>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.responsive-video.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "t:sections.responsive-video.settings.enable_video_looping.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "manual_video_play",
+      "label": "t:sections.responsive-video.settings.manual_video_play.label",
+      "info": "t:sections.responsive-video.settings.manual_video_play.info",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.responsive-video.settings.header__1.content"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "t:sections.responsive-video.settings.mobile_video.label"
+    },
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "t:sections.responsive-video.settings.desktop_video.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.responsive-video.settings.header__2.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.responsive-video.settings.paragraph.content"
+    },
+    {
+      "type": "video_url",
+      "id": "mobile_video_url",
+      "accept": ["youtube"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "t:sections.responsive-video.settings.mobile_video_url.label",
+      "info": "t:sections.responsive-video.settings.mobile_video_url.info"
+    },
+    {
+      "type": "video_url",
+      "id": "desktop_video_url",
+      "accept": ["youtube"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "t:sections.responsive-video.settings.desktop_video_url.label",
+      "info": "t:sections.responsive-video.settings.desktop_video_url.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_cover_image",
+      "label": "t:sections.responsive-video.settings.mobile_cover_image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_cover_image",
+      "label": "t:sections.responsive-video.settings.desktop_cover_image.label"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:sections.responsive-video.settings.description.label",
+      "info": "t:sections.responsive-video.settings.description.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.responsive-video.presets.name"
+    }
+  ]
+}
+{% endschema %}
