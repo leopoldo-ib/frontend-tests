@@ -28,7 +28,8 @@ const config = {
   ROUTES: {
     HOMEPAGE: '/',
     COLLECTION_PAGE_ALL: '/collections/all',
-    PRODUCT_PAGE_SAMPLE: '/products/amazing-aluminum-bag-collection1'
+    PRODUCT_PAGE_SAMPLE: '/products/amazing-aluminum-bag-collection1',
+    CONTACT: '/pages/contact'
   },
   TEST_WEB_SERVER: {
     SHOPIFY_FLAG_STORE: shopifyFlagStore,
