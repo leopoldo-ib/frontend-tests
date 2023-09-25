@@ -32,7 +32,7 @@ jobs:
         SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
         SHOPIFY_CLI_TTY: 0
         SHOPIFY_ONLINE_STORE_PASSWORD: ${{ secrets.SHOPIFY_ONLINE_STORE_PASSWORD }}
-      run: npx playwright test
+      run: npx playwright test --update-snapshots
     - uses: actions/upload-artifact@v3
       if: always()
       with:
